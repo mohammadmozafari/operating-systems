@@ -70,6 +70,7 @@ int main()
         x = strlen(pipe_output);
         for (i = 0; i < (int)strlen(sum); i++)
             pipe_output[x + i] = sum[i];
+        pipe_output[x + i] = '\0';
         write(pipe_dir2[1], pipe_output, strlen(pipe_output) + 1);
         close(pipe_dir2[1]);
 
