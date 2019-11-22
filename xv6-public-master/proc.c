@@ -150,6 +150,12 @@ userinit(void)
 
   p->state = RUNNABLE;
 
+  // Written By 9631069
+  int syscall_num = sizeof(p->syscall_times) / 4;
+  int i = 0;
+  for (i = 0; i < syscall_num; i++)
+    p->syscall_times[i] = 0;
+
   release(&ptable.lock);
 }
 

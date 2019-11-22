@@ -59,6 +59,14 @@ sys_getChildren(void)
   return children_number(pid);
 }
 
+int
+sys_getCount(void)
+{
+  int sysid;
+  if(argint(0, &sysid) < 0)
+    return -1;
+  return myproc()->syscall_times[sysid];
+}
 
 int
 sys_sbrk(void)
