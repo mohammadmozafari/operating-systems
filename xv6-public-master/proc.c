@@ -549,7 +549,7 @@ children_number(int pid)
       pow = 10;
       while (ppid >= pow)
       	pow *= 10;
-      output = output * pow + ppid;
+      output = output * pow + p->pid;
     }
   }
   return output;
