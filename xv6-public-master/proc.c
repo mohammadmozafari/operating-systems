@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include <math.h>     // Written By 9631069
 
 struct {
   struct spinlock lock;
@@ -531,4 +532,26 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+// Written By 9631069
+long long int
+children_number(int pid)
+{
+	long long int output = 0;
+  int ppid, pow;
+  struct proc *p;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    ppid = p->parent->pid;
+    if(ppid == pid)
+    {
+      pow = 10;
+      while (ppid >= pow)
+      	pow *= 10;
+      output = output * pow + ppid;
+    }
+  }
+  return output;
 }

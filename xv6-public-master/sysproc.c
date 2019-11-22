@@ -42,6 +42,21 @@ sys_getpid(void)
   return myproc()->pid;
 }
 
+// Written By 9631069
+int
+sys_getppid(void)
+{
+  return myproc()->parent->pid;
+}
+
+// Written By 9631069
+int
+sys_getChildren(int pid)
+{
+  return getChildren(pid);
+}
+
+
 int
 sys_sbrk(void)
 {

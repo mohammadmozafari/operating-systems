@@ -120,6 +120,7 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+long long int   children_number(int pid);   // Written By 9631069
 
 // swtch.S
 void            swtch(struct context**, struct context*);
