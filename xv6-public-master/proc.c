@@ -237,6 +237,12 @@ exit(void)
   struct proc *p;
   int fd;
 
+  // Written By 9631069
+  int syscall_num = sizeof(curproc->syscall_times) / 4;
+  int i = 0;
+  for (i = 0; i < syscall_num; i++)
+    curproc->syscall_times[i] = 0;
+
   if(curproc == initproc)
     panic("init exiting");
 
