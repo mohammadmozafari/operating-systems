@@ -51,9 +51,12 @@ sys_getppid(void)
 
 // Written By 9631069
 int
-sys_getChildren(int pid)
+sys_getChildren(void)
 {
-  return getChildren(pid);
+  int pid;
+  if(argint(0, &pid) < 0)
+    return -1;
+  return children_number(pid);
 }
 
 

@@ -6,7 +6,6 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#include <math.h>     // Written By 9631069
 
 struct {
   struct spinlock lock;
@@ -535,10 +534,10 @@ procdump(void)
 }
 
 // Written By 9631069
-long long int
+int
 children_number(int pid)
 {
-	long long int output = 0;
+	int output = 0;
   int ppid, pow;
   struct proc *p;
 
