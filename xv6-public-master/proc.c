@@ -86,6 +86,14 @@ allocproc(void)
   return 0;
 
 found:
+  // Written By 9631069
+  int syscall_num = sizeof(p->syscall_times) / 4;
+  int i = 0;
+  for (i = 0; i < syscall_num; i++)
+    p->syscall_times[i] = 0;
+  p->priority = 5;
+  p->calculatedPriority = lowest_cal_priority();
+
   p->state = EMBRYO;
   p->pid = nextpid++;
 
@@ -149,12 +157,6 @@ userinit(void)
   acquire(&ptable.lock);
 
   p->state = RUNNABLE;
-
-  // Written By 9631069
-  int syscall_num = sizeof(p->syscall_times) / 4;
-  int i = 0;
-  for (i = 0; i < syscall_num; i++)
-    p->syscall_times[i] = 0;
 
   release(&ptable.lock);
 }
@@ -238,10 +240,10 @@ exit(void)
   int fd;
 
   // Written By 9631069
-  int syscall_num = sizeof(curproc->syscall_times) / 4;
-  int i = 0;
-  for (i = 0; i < syscall_num; i++)
-    curproc->syscall_times[i] = 0;
+  // int syscall_num = sizeof(curproc->syscall_times) / 4;
+  // int i = 0;
+  // for (i = 0; i < syscall_num; i++)
+  //   curproc->syscall_times[i] = 0;
 
   if(curproc == initproc)
     panic("init exiting");
@@ -565,4 +567,20 @@ children_number(int pid)
     }
   }
   return output;
+}
+
+int
+lowest_cal_priority()
+{
+  struct proc *p;
+  int lowest, min = -1;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == UNUSED)
+      continue;
+    if (p->calculatedPriority < min || min == -1)
+      min = p->calculatedPriority;
+  }
+  lowest = min == -1 ? 0 : min;
+  return lowest;
 }

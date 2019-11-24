@@ -104,7 +104,7 @@ trap(struct trapframe *tf)
   // If interrupts were on while locks held, would need to check nlock.
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER &&
-     ticks % 10 == 0)       // Written By 9631069
+     ticks % QUANTUM == 0)       // Written By 9631069
     yield();
 
   // Check if the process has been killed since we yielded
