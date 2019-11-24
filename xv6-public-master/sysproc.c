@@ -86,12 +86,13 @@ sys_changePriority(void)
 int
 sys_changePolicy(void)
 {
-  int policy;
-  if(argint(0, &policy) < 0)
+  int pol;
+  if(argint(0, &pol) < 0)
     return -1;
-  if (policy > 2 || policy < 0)
+  if (pol > 2 || pol < 0)
     return -1;
-  scheduling_policy = policy;
+  policy = pol;
+  return 1;
 }
 
 // Written By 9631069
@@ -99,7 +100,7 @@ int
 sys_waitForChild(void)
 {
   struct timeVariables *tv;
-  if (argptr(1, (void*)&tv, sizeof(*tv)) < 0)
+  if (argptr(0, (void*)&tv, sizeof(*tv)) < 0)
     return -1;
   return waitForChild(tv);
 }

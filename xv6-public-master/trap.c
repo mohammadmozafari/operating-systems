@@ -51,6 +51,7 @@ trap(struct trapframe *tf)
     if(cpuid() == 0){
       acquire(&tickslock);
       ticks++;
+      update_proc_times();
       wakeup(&ticks);
       release(&tickslock);
     }
@@ -105,16 +106,7 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
   {
-    // Written By 9631069
-    struct proc *p = myproc();
-    if (p->state == SLEEPING)
-      p->sleepingTime++;
-    else if (p->state == RUNNABLE)
-      p->readyTime++;
-    else if (p->state == RUNNING)
-      p->runningTime++;
-
-    if (scheduling_policy == 0)
+    if (policy == 0)
       yield();
     else if (ticks % QUANTUM == 0)
       yield();

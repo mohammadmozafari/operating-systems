@@ -15,6 +15,7 @@ struct {
 static struct proc *initproc;
 
 int nextpid = 1;
+int policy = 0;
 extern void forkret(void);
 extern void trapret(void);
 
@@ -75,6 +76,8 @@ allocproc(void)
 {
   struct proc *p;
   char *sp;
+  int syscall_num = sizeof(p->syscall_times) / 4;
+  int i = 0;
 
   acquire(&ptable.lock);
 
@@ -87,8 +90,6 @@ allocproc(void)
 
 found:
   // Written By 9631069
-  int syscall_num = sizeof(p->syscall_times) / 4;
-  int i = 0;
   for (i = 0; i < syscall_num; i++)
     p->syscall_times[i] = 0;
   p->priority = 5;
@@ -405,8 +406,8 @@ scheduler(void)
       if(p->state != RUNNABLE)
         continue;
 
-      // Written By Me
-      if (scheduling_policy == 2)
+      // Written By 9631069
+      if (policy == 2)
       {
         highP = p;
         for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
@@ -656,4 +657,22 @@ lowest_cal_priority()
   }
   lowest = min == -1 ? 0 : min;
   return lowest;
+}
+
+void
+update_proc_times()
+{
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == UNUSED)
+      continue;
+      
+    if (p->state == RUNNING)
+      p->runningTime++;
+    else if (p->state == RUNNABLE)
+      p->readyTime++;
+    else if (p->state == SLEEPING)
+      p->sleepingTime++;
+  }
 }

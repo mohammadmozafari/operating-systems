@@ -11,15 +11,7 @@ struct stat;
 struct superblock;
 
 // Written By 9631069
-int scheduling_policy = 0;
-struct timeVariables
-{
-    int creationTime;
-    int terminationTime;
-    int sleepingTime;
-    int readyTime;
-    int runningTime;
-};
+extern int policy;
 
 // bio.c
 void            binit(void);
@@ -133,6 +125,8 @@ void            wakeup(void*);
 void            yield(void);
 int             children_number(int pid);               // Written By 9631069
 int             waitForChild(struct timeVariables*);    // Written By 9631069
+int             lowest_cal_priority();                  // Written By 9631069
+void            update_proc_times();                    // Written By 9631069
 
 // swtch.S
 void            swtch(struct context**, struct context*);
