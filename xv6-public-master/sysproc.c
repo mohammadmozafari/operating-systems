@@ -59,6 +59,7 @@ sys_getChildren(void)
   return children_number(pid);
 }
 
+// Written By 9631069
 int
 sys_getCount(void)
 {
@@ -66,6 +67,19 @@ sys_getCount(void)
   if(argint(0, &sysid) < 0)
     return -1;
   return myproc()->syscall_times[sysid];
+}
+
+// Written By 9631069
+int
+sys_changePriority(void)
+{
+  int pr;
+  if(argint(0, &pr) < 0)
+    return -1;
+  if (pr > 5 || pr < 1)
+    return -1;
+  myproc()->priority = pr;
+  return 0;
 }
 
 int

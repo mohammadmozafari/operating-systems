@@ -336,7 +336,7 @@ wait(void)
 void
 scheduler(void)
 {
-  struct proc *p;
+  struct proc *p, *highP, *p1;
   struct cpu *c = mycpu();
   c->proc = 0;
   
@@ -349,6 +349,16 @@ scheduler(void)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+
+      // Written By Me
+      highP = p;
+      for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+        if(p1->state != RUNNABLE)
+          continue;
+        if (p1->calculatedPriority > highP->calculatedPriority)
+          highP = p1;
+      }
+      p = highP;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -401,6 +411,11 @@ yield(void)
 {
   acquire(&ptable.lock);  //DOC: yieldlock
   myproc()->state = RUNNABLE;
+  
+  // Written By Me
+  int pri = myproc()->priority;
+  myproc()->calculatedPriority += pri;
+
   sched();
   release(&ptable.lock);
 }
