@@ -9,7 +9,17 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
-int scheduling_policy = 0;          // Written By 9631069
+
+// Written By 9631069
+int scheduling_policy = 0;
+struct timeVariables
+{
+    int creationTime;
+    int terminationTime;
+    int sleepingTime;
+    int readyTime;
+    int runningTime;
+};
 
 // bio.c
 void            binit(void);
@@ -121,7 +131,8 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-int             children_number(int pid);   // Written By 9631069
+int             children_number(int pid);               // Written By 9631069
+int             waitForChild(struct timeVariables*);    // Written By 9631069
 
 // swtch.S
 void            swtch(struct context**, struct context*);

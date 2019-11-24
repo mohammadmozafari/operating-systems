@@ -93,6 +93,11 @@ found:
     p->syscall_times[i] = 0;
   p->priority = 5;
   p->calculatedPriority = lowest_cal_priority();
+  p->creationTime = ticks;
+  p->terminationTime = 0;
+  p->sleepingTime = 0;
+  p->readyTime = 0;
+  p->runningTime = 0;
 
   p->state = EMBRYO;
   p->pid = nextpid++;
@@ -240,6 +245,7 @@ exit(void)
   int fd;
 
   // Written By 9631069
+  curproc->terminationTime = ticks;
   // int syscall_num = sizeof(curproc->syscall_times) / 4;
   // int i = 0;
   // for (i = 0; i < syscall_num; i++)
@@ -309,6 +315,55 @@ wait(void)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
+        release(&ptable.lock);
+        return pid;
+      }
+    }
+
+    // No point waiting if we don't have any children.
+    if(!havekids || curproc->killed){
+      release(&ptable.lock);
+      return -1;
+    }
+
+    // Wait for children to exit.  (See wakeup1 call in proc_exit.)
+    sleep(curproc, &ptable.lock);  //DOC: wait-sleep
+  }
+}
+
+// Written By 9631069
+int waitForChild(struct timeVariables *t)
+{
+  struct proc *p;
+  int havekids, pid;
+  struct proc *curproc = myproc();
+  
+  acquire(&ptable.lock);
+  for(;;){
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->parent != curproc)
+        continue;
+      havekids = 1;
+      if(p->state == ZOMBIE){
+        // Found one.
+        pid = p->pid;
+        kfree(p->kstack);
+        p->kstack = 0;
+        freevm(p->pgdir);
+        p->pid = 0;
+        p->parent = 0;
+        p->name[0] = 0;
+        p->killed = 0;
+        p->state = UNUSED;
+        // added these lines
+        t->creationTime = p->creationTime;
+        t->terminationTime = p->terminationTime;
+        t->runningTime = p->runningTime;
+        t->readyTime = p->readyTime;
+        t->sleepingTime = p->sleepingTime;
+
         release(&ptable.lock);
         return pid;
       }

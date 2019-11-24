@@ -106,6 +106,14 @@ trap(struct trapframe *tf)
      tf->trapno == T_IRQ0+IRQ_TIMER)
   {
     // Written By 9631069
+    struct proc *p = myproc();
+    if (p->state == SLEEPING)
+      p->sleepingTime++;
+    else if (p->state == RUNNABLE)
+      p->readyTime++;
+    else if (p->state == RUNNING)
+      p->runningTime++;
+
     if (scheduling_policy == 0)
       yield();
     else if (ticks % QUANTUM == 0)

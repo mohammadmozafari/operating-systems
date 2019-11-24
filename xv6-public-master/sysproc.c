@@ -94,6 +94,16 @@ sys_changePolicy(void)
   scheduling_policy = policy;
 }
 
+// Written By 9631069
+int
+sys_waitForChild(void)
+{
+  struct timeVariables *tv;
+  if (argptr(1, (void*)&tv, sizeof(*tv)) < 0)
+    return -1;
+  return waitForChild(tv);
+}
+
 int
 sys_sbrk(void)
 {
