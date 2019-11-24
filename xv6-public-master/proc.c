@@ -351,14 +351,17 @@ scheduler(void)
         continue;
 
       // Written By Me
-      highP = p;
-      for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
-        if(p1->state != RUNNABLE)
-          continue;
-        if (p1->calculatedPriority > highP->calculatedPriority)
-          highP = p1;
+      if (scheduling_policy == 2)
+      {
+        highP = p;
+        for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
+          if(p1->state != RUNNABLE)
+            continue;
+          if (p1->calculatedPriority > highP->calculatedPriority)
+            highP = p1;
+        }
+        p = highP;
       }
-      p = highP;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it

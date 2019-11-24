@@ -82,6 +82,18 @@ sys_changePriority(void)
   return 0;
 }
 
+// Written By 9631069
+int
+sys_changePolicy(void)
+{
+  int policy;
+  if(argint(0, &policy) < 0)
+    return -1;
+  if (policy > 2 || policy < 0)
+    return -1;
+  scheduling_policy = policy;
+}
+
 int
 sys_sbrk(void)
 {

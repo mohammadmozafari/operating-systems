@@ -9,6 +9,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+int scheduling_policy = 0;          // Written By 9631069
 
 // bio.c
 void            binit(void);
