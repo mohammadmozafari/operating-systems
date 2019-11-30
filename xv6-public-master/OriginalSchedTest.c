@@ -4,7 +4,7 @@
 int main()
 {
     const int fork_num = 10;
-    int i;
+    int i, j;
     struct timeVariables *t[fork_num];
     int childrenId[fork_num];
     int ct, tt, st, rt, rut;
@@ -20,8 +20,8 @@ int main()
     {
         if (fork() == 0)
         {
-            for (i = 0; i < 1000; i++)
-                printf(1, "%d: %d\n", getpid(), (i+1));
+            for (j = 0; j < 1000; j++)
+                printf(1, "%d: %d\n", getpid(), (j+1));
             exit();
         }
     }

@@ -394,7 +394,7 @@ int waitForChild(struct timeVariables *t)
 void
 scheduler(void)
 {
-  struct proc *p, *highP, *p1;
+  struct proc *p, *p1;
   struct cpu *c = mycpu();
   c->proc = 0;
   
@@ -402,6 +402,7 @@ scheduler(void)
     // Enable interrupts on this processor.
     sti();
 
+    struct proc *highP;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -409,16 +410,15 @@ scheduler(void)
         continue;
 
       // Written By 9631069
+      highP = p;
       if (policy == 2)
       {
-        highP = p;
         for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
           if(p1->state != RUNNABLE)
             continue;
-          if (p1->calculatedPriority > highP->calculatedPriority)
+          if (p1->calculatedPriority < highP->calculatedPriority)
             highP = p1;
         }
-        p = highP;
       }
 
       // Switch to chosen process.  It is the process's job
@@ -471,12 +471,10 @@ void
 yield(void)
 {
   acquire(&ptable.lock);  //DOC: yieldlock
-  myproc()->state = RUNNABLE;
-  
-  // Written By Me
+    
   int pri = myproc()->priority;
   myproc()->calculatedPriority += pri;
-
+  myproc()->state = RUNNABLE;
   sched();
   release(&ptable.lock);
 }
@@ -658,7 +656,7 @@ lowest_cal_priority()
     if (p->calculatedPriority < min || min == -1)
       min = p->calculatedPriority;
   }
-  lowest = min == -1 ? 0 : min;
+  lowest = (min == -1 ? 0 : min);
   return lowest;
 }
 

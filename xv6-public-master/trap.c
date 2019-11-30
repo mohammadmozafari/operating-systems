@@ -109,7 +109,9 @@ trap(struct trapframe *tf)
     if (policy == 0)
       yield();
     else if (ticks % QUANTUM == 0)
+    {
       yield();
+    }
   }
 
   // Check if the process has been killed since we yielded
