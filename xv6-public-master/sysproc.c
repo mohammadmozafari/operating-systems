@@ -69,20 +69,20 @@ sys_getCount(void)
   return myproc()->syscall_times[sysid];
 }
 
-// Written By 9631069
+// changes the priority of the current process. the new priority must be in range (1, 5)
 int
 sys_changePriority(void)
 {
   int pr;
   if(argint(0, &pr) < 0)
     return -1;
-  if (pr > 5 || pr < 1)
+  if (pr >= 5 || pr <= 1)
     return -1;
   myproc()->priority = pr;
-  return 0;
+  return 1;
 }
 
-// Written By 9631069
+// changes the xv6 policy for cpu scheduling. legal values are 0, 1, 2
 int
 sys_changePolicy(void)
 {
@@ -95,7 +95,7 @@ sys_changePolicy(void)
   return 1;
 }
 
-// Written By 9631069
+// waits until a child terminates and get the child's time variables in a struct
 int
 sys_waitForChild(void)
 {

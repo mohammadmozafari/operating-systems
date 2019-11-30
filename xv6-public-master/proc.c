@@ -89,17 +89,19 @@ allocproc(void)
   return 0;
 
 found:
-  // Written By 9631069
+  // initialize process's fields 
   for (i = 0; i < syscall_num; i++)
     p->syscall_times[i] = 0;
+  
   p->priority = 5;
   p->calculatedPriority = lowest_cal_priority();
+  
   p->creationTime = ticks;
   p->terminationTime = 0;
   p->sleepingTime = 0;
   p->readyTime = 0;
   p->runningTime = 0;
-
+  
   p->state = EMBRYO;
   p->pid = nextpid++;
 
@@ -245,12 +247,8 @@ exit(void)
   struct proc *p;
   int fd;
 
-  // Written By 9631069
+  // set termination time of the process
   curproc->terminationTime = ticks;
-  // int syscall_num = sizeof(curproc->syscall_times) / 4;
-  // int i = 0;
-  // for (i = 0; i < syscall_num; i++)
-  //   curproc->syscall_times[i] = 0;
 
   if(curproc == initproc)
     panic("init exiting");
@@ -332,7 +330,9 @@ wait(void)
   }
 }
 
-// Written By 9631069
+/* this method extends the wait method.
+   it waits until a child terminates and then gets its time variables.
+*/
 int waitForChild(struct timeVariables *t)
 {
   struct proc *p;
@@ -349,6 +349,14 @@ int waitForChild(struct timeVariables *t)
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
+        
+        // added these lines
+        t->creationTime = p->creationTime;
+        t->terminationTime = p->terminationTime;
+        t->runningTime = p->runningTime;
+        t->readyTime = p->readyTime;
+        t->sleepingTime = p->sleepingTime;
+        
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
@@ -358,12 +366,6 @@ int waitForChild(struct timeVariables *t)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
-        // added these lines
-        t->creationTime = p->creationTime;
-        t->terminationTime = p->terminationTime;
-        t->runningTime = p->runningTime;
-        t->readyTime = p->readyTime;
-        t->sleepingTime = p->sleepingTime;
 
         release(&ptable.lock);
         return pid;
@@ -643,6 +645,7 @@ children_number(int pid)
   return output;
 }
 
+// finds the minimum calculated priority among all processes in proc table
 int
 lowest_cal_priority()
 {
@@ -659,6 +662,7 @@ lowest_cal_priority()
   return lowest;
 }
 
+// updates the time variables for all the processes in the process table
 void
 update_proc_times()
 {

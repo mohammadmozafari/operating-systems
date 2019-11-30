@@ -50,11 +50,11 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 
-  // Written By 9631069
-  int syscall_times[30];
-  int priority;
-  int calculatedPriority;
+  int syscall_times[30];       // number of calls to each system call is saved
+  int priority;                // priority of each proc in range [1, 5]. 1 is highest priority
+  int calculatedPriority;      // calculated priority used to choose a process for running.
 
+  // keep track of time variables
   int creationTime;
   int terminationTime;
   int sleepingTime;
