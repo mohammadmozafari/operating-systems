@@ -76,7 +76,7 @@ sys_changePriority(void)
   int pr;
   if(argint(0, &pr) < 0)
     return -1;
-  if (pr >= 5 || pr <= 1)
+  if (pr >= 5 || pr < 1)
     return -1;
   myproc()->priority = pr;
   return 1;
