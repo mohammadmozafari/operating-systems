@@ -48,7 +48,7 @@ int main()
         
         close(pipe_dir2[1]);
         read(pipe_dir2[0], pipe_input, 100);
-        printf("%s\n", pipe_input);
+        printf("(P) %s\n", pipe_input);
         close(pipe_dir2[0]);
 
         printf("(P) End parent process\n");
