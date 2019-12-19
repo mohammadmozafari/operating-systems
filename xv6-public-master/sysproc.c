@@ -42,14 +42,14 @@ sys_getpid(void)
   return myproc()->pid;
 }
 
-// Written By 9631069
+// This system call returns the id of the parent of current process
 int
 sys_getppid(void)
 {
   return myproc()->parent->pid;
 }
 
-// Written By 9631069
+// This system call returns the ids of the children of the given process as a multidigit number
 int
 sys_getChildren(void)
 {
@@ -59,7 +59,8 @@ sys_getChildren(void)
   return children_number(pid);
 }
 
-// Written By 9631069
+/* This system call gets a valid system call number
+   and returns the number of times the referenced system call was invoked by the current proccess. */
 int
 sys_getCount(void)
 {
@@ -76,7 +77,7 @@ sys_changePriority(void)
   int pr;
   if(argint(0, &pr) < 0)
     return -1;
-  if (pr >= 5 || pr < 1)
+  if (pr > 5 || pr < 1)
     return -1;
   myproc()->priority = pr;
   return 1;

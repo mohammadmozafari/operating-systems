@@ -383,63 +383,6 @@ int waitForChild(struct timeVariables *t)
   }
 }
 
-//PAGEBREAK: 42
-// Per-CPU process scheduler.
-// Each CPU calls scheduler() after setting itself up.
-// Scheduler never returns.  It loops, doing:
-//  - choose a process to run
-//  - swtch to start running that process
-//  - eventually that process transfers control
-//      via swtch back to the scheduler.
-// void
-// scheduler(void)
-// {
-//   struct proc *p, *p1;
-//   struct cpu *c = mycpu();
-//   c->proc = 0;
-  
-//   for(;;){
-//     // Enable interrupts on this processor.
-//     sti();
-
-//     struct proc *highP;
-//     // Loop over process table looking for process to run.
-//     acquire(&ptable.lock);
-//     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-//       if(p->state != RUNNABLE)
-//         continue;
-
-//       highP = p;
-//       if (policy == 2)
-//       {
-//         for(p1 = ptable.proc; p1 < &ptable.proc[NPROC]; p1++){
-//           if(p1->state != RUNNABLE)
-//             continue;
-//           if (p1->calculatedPriority < highP->calculatedPriority)
-//             highP = p1;
-//         }
-//         p = highP;
-//       }
-
-//       // Switch to chosen process.  It is the process's job
-//       // to release ptable.lock and then reacquire it
-//       // before jumping back to us.
-//       cprintf("\n###%d###\n", p->pid);
-//       c->proc = p;
-//       switchuvm(p);
-//       p->state = RUNNING;
-
-//       swtch(&(c->scheduler), p->context);
-//       switchkvm();
-
-//       // Process is done running for now.
-//       // It should have changed its p->state before coming back.
-//       c->proc = 0;
-//     }
-//     release(&ptable.lock);
-
-//   }
-// }
 void
 scheduler(void)
 {
@@ -458,6 +401,7 @@ scheduler(void)
       if(p->state != RUNNABLE)
         continue;
 
+      // if we are using second policy then we have to choose the process with lowest calculatedPriority
       highP = p;
       if (policy == 2)
       {
@@ -473,7 +417,6 @@ scheduler(void)
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      // cprintf("\n###%d###\n", p->pid);
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
@@ -668,7 +611,7 @@ procdump(void)
   }
 }
 
-// Written By 9631069
+// given the id of a process, this function returns the a multidigit number corresponding to pid of its children.
 int
 children_number(int pid)
 {

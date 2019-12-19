@@ -149,7 +149,7 @@ syscall(void)
   num = curproc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     curproc->tf->eax = syscalls[num]();
-    myproc()->syscall_times[num]++;         // Written By 9631069
+    myproc()->syscall_times[num]++;                   // increment the number of times this system call was invoked by this process
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             curproc->pid, curproc->name, num);
