@@ -70,7 +70,7 @@ sys_getCount(void)
   return myproc()->syscall_times[sysid];
 }
 
-// changes the priority of the current process. the new priority must be in range (1, 5)
+// changes the priority of the current process. the new priority must be in range [1, 5]
 int
 sys_changePriority(void)
 {

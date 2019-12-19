@@ -108,7 +108,7 @@ trap(struct trapframe *tf)
   {
     if (policy == 0)
       yield();
-    else if (ticks % QUANTUM == 0)
+    else if (myproc()->runningTime % QUANTUM == (QUANTUM - 1))
     {
       yield();
     }

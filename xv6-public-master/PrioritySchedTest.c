@@ -36,7 +36,7 @@ int main()
         if (fid == 0)
         {
             changePriority(class_num - i / class_num);
-            for (j = 0; j < 1000; j++)
+            for (j = 0; j < 500; j++)
                 printf(1, "%d: %d\n", (i+1), (j+1));
             exit();
         }

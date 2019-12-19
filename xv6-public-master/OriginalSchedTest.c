@@ -20,6 +20,8 @@ int main()
     {
         if (fork() == 0)
         {
+            printf(1, "process %d is created\n", getpid());
+            sleep(100);                                         // wait until all processes are built
             for (j = 0; j < 1000; j++)
                 printf(1, "%d: %d\n", getpid(), (j+1));
             exit();

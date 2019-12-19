@@ -52,7 +52,7 @@ struct proc {
 
   int syscall_times[30];       // number of calls to each system call is saved
   int priority;                // priority of each proc in range [1, 5]. 1 is highest priority
-  int calculatedPriority;      // calculated priority used to choose a process for running.
+  long int calculatedPriority;      // calculated priority used to choose a process for running.
 
   // keep track of time variables
   int creationTime;
