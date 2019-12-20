@@ -106,7 +106,7 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
   {
-    if (policy == 0)
+    if (policy == 0 || policy == 2)
       yield();
     else if (myproc()->runningTime % QUANTUM == (QUANTUM - 1))
     {

@@ -659,8 +659,10 @@ update_proc_times()
   {
     if (p->state == UNUSED)
       continue;
-      
-    if (p->state == RUNNING)
+
+    if (p->state == EMBRYO)
+      p->creationTime++;  
+    else if (p->state == RUNNING)
       p->runningTime++;
     else if (p->state == RUNNABLE)
       p->readyTime++;

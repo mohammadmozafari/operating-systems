@@ -68,7 +68,7 @@ int main()
 	printf(1, "\n");
     for (i = 0; i < fork_num; i++)
     {
-        printf(1, "process %d -> created: %d - terminated: %d - slept: %d - ready: %d - running: %d\n", prc[i]->pid, prc[i]->ct, prc[i]->tt, prc[i]->st, prc[i]->rt, prc[i]->rut);
+        printf(1, "%d -> created: %d - terminated: %d - slept: %d - ready: %d - running: %d\n", (i+1), prc[i]->ct, prc[i]->tt, prc[i]->st, prc[i]->rt, prc[i]->rut);
         printf(1, "T.T: %d, W.T: %d, CBT: %d\n", (prc[i]->tt - prc[i]->ct), (prc[i]->tt - prc[i]->ct - prc[i]->rut), prc[i]->rut);
         printf(1, "====================================================================================\n");
         sum_tt[i / class_num] += prc[i]->tt - prc[i]->ct;
