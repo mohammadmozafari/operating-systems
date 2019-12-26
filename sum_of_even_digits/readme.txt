@@ -1,1 +1,0 @@
-This is a program that uses pipes and forks in linux
