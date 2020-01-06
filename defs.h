@@ -139,6 +139,11 @@ void            releasesleep(struct sleeplock*);
 int             holdingsleep(struct sleeplock*);
 void            initsleeplock(struct sleeplock*, char*);
 
+// ticketlock.c
+void            initTicketLock(struct ticketlock*, char*);
+void            acquireTicketLock(struct ticketlock*);
+void            releaseTicketLock(struct ticketlock*);
+
 // string.c
 int             memcmp(const void*, const void*, uint);
 void*           memmove(void*, const void*, uint);

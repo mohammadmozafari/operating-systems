@@ -7,6 +7,7 @@
 #include "proc.h"
 #include "ticketlock.h"
 
+/* initialize a ticket lock with a name */
 void initTicketLock(struct ticketlock *lock, char *name)
 {
     lock->name = name;
