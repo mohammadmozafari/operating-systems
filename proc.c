@@ -9,6 +9,7 @@
 #include "ticketlock.h"
 
 struct ticketlock ticket_lk;
+int shared_counter = 0;
 
 struct {
   struct spinlock lock;
@@ -536,15 +537,48 @@ procdump(void)
   }
 }
 
-void ticketlockInit(void)
+void delay(int end)
 {
-  initTicketLock(&ticket_lk, "ticketttty");
+  uint begin, now;
+  acquire(&tickslock);
+  begin = ticks;
+  release(&tickslock);
+  while (1)
+  {
+    acquire(&tickslock);
+    now = ticks;
+    release(&tickslock);
+    if (now - begin > end)
+      break;
+  }
 }
 
-void ticketlockTest(void)
+void ticket_init(void)
 {
-  acquireTicketLock(&ticket_lk);
-  microdelay(200);
-  cprintf("process %d has the lock.", myproc()->pid);
-  releaseTicketLock(&ticket_lk);
+  init_lock(&ticket_lk, "ticketttty");
+}
+
+int ticket_test(void)
+{
+  // cprintf("process %d attempts to get lock. %d\n", myproc()->pid, ticket_lk.next_ticket);
+  acquire_lock(&ticket_lk);
+  delay(10);
+  shared_counter++;
+  cprintf("process %d has the lock. counter = %d\n", myproc()->pid, shared_counter);
+  release_lock(&ticket_lk);
+  // cprintf("process %d released lock. %d-%d\n", myproc()->pid, ticket_lk.next_ticket, ticket_lk.current_turn);
+  return shared_counter;
+}
+
+void ticket_sleep(void *chan)
+{
+  struct proc *p = myproc();
+  if (p == 0)
+    panic("sleep");
+  acquire(&ptable.lock);
+  p->chan = chan;
+  p->state = SLEEPING;
+  sched();
+  p->chan = 0;
+  release(&ptable.lock);
 }

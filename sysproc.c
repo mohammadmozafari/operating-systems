@@ -92,9 +92,10 @@ sys_uptime(void)
 
 int sys_ticketlockInit(void)
 {
-  ticketlockInit();
+  ticket_init();
+  return 0;
 }
 int sys_ticketlockTest(void)
 {
-  ticketlockTest();
+  return ticket_test();
 }

@@ -8,29 +8,25 @@
 #include "ticketlock.h"
 
 /* initialize a ticket lock with a name */
-void initTicketLock(struct ticketlock *lock, char *name)
+void init_lock(struct ticketlock *lock, char *name)
 {
     lock->name = name;
-    lock->proc = 0;
     lock->next_ticket = 0;
     lock->current_turn = 0;
 }
 
-void acquireTicketLock(struct ticketlock *lock)
+/* acquire the ticket lock */
+void acquire_lock(struct ticketlock *lock)
 {
-    int myTicket;
-    myTicket = fetch_and_add(&lock->next_ticket, 1);
-    while (lock->current_turn != myTicket); 
-        // giveprioriy(lock->proc);
-    lock->cpu = mycpu();
-    lock->proc = myproc();
+    int myTicket = fetch_and_add(&lock->next_ticket, 1);
+    while (lock->current_turn != myTicket)
+        ticket_sleep(lock);
     getcallerpcs(&lock, lock->pcs);
 }
 
-void releaseTicketLock(struct ticketlock *lock)
+/* release the ticketlock */
+void release_lock(struct ticketlock *lock)
 {
-    lock->pcs[0] = 0;
-    lock->proc = 0;
-    lock->cpu = 0;
-    lock->current_turn++;
+    fetch_and_add(&lock->current_turn, 1);
+    wakeup(lock);
 }
