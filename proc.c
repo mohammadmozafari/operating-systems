@@ -8,8 +8,10 @@
 #include "spinlock.h"
 #include "ticketlock.h"
 
-struct ticketlock ticket_lk;
+struct ticketlock ticket_lk, mutex, writer_lock;
 int shared_counter = 0;
+int num_reader = 0;
+int shared_reader_write = 0;
 
 struct {
   struct spinlock lock;
@@ -581,4 +583,35 @@ void ticket_sleep(void *chan)
   sched();
   p->chan = 0;
   release(&ptable.lock);
+}
+
+void init_readers_writers()
+{
+  init_lock(&mutex, "mutex");
+  init_lock(&writer_lock, "writerlock");
+}
+
+int do_read()
+{
+  int value = 0;
+  acquire_lock(&mutex);
+  num_reader += 1;
+  if (num_reader == 1)
+    acquire_lock(&writer_lock);
+  release_lock(&mutex);
+  value = shared_reader_write;
+  acquire_lock(&mutex);
+  num_reader -= 1;
+  if (num_reader == 0)
+    release_lock(&writer_lock);
+  release_lock(&mutex);
+  return value;
+}
+
+int do_write()
+{
+  acquire_lock(&writer_lock);
+  shared_reader_write += 1;
+  release_lock(&writer_lock);
+  return 0;
 }

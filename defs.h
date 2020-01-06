@@ -121,9 +121,12 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-void            ticket_init();
-int             ticket_test();
-void            ticket_sleep();
+void            ticket_init(void);
+int             ticket_test(void);
+void            ticket_sleep(void*);
+void            init_readers_writers(void);
+int             do_read(void);
+int             do_write(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

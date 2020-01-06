@@ -99,3 +99,18 @@ int sys_ticketlockTest(void)
 {
   return ticket_test();
 }
+int sys_rwinit(void)
+{
+  init_readers_writers();
+  return 0;
+}
+int sys_rwtest(void)
+{
+  int mode;
+  if (argint(0, &mode) < 0)
+    return -1;
+  if (mode == 0)
+    return do_read();
+  else
+    return do_write();
+}
