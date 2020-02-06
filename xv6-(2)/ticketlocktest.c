@@ -33,7 +33,7 @@ int main()
         for (int i = 0; i < NCHILD; i++)
             wait();
         printf(1, "user program finished\n");
-        printf(1, "ticket lock value: %d\n", ticketlockTest() - 1);
+        printf(2, "ticket lock value: %d\n", ticketlockTest() - 1);
     }
     exit();
     return 0;
