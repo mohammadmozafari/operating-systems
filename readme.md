@@ -25,5 +25,7 @@ This folder contains a copy of the xv6 operating system with some additional fea
 - A new lock called **ticket lock** is added.
 - The famous **readers/writers** problem is implemented using this ticket lock.
 
+## **exploring-linux**
 
+In this folder there are some exercises in linux using python and c programming language to better understand this operating system.
 
