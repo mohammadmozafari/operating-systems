@@ -22,8 +22,8 @@ This folder contains a copy of the xv6 operating system with some additional fea
 
 This folder contains a copy of the xv6 operating system with some additional features described as below.
 
-- A new lock called ticket lock is added.
-- The famous readers/writers problem is implemented using this ticket lock.
+- A new lock called **ticket lock** is added.
+- The famous **readers/writers** problem is implemented using this ticket lock.
 
 
 
